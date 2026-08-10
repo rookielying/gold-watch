@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>积存金价格监控</title>
+<style>
+  :root { --fg:#1f2329; --muted:#8a9099; --card:#fff; --bg:#f5f6f7; --up:#e15554; --down:#3a9e6b; --line:#e5e6eb; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--fg); }
+  .wrap { max-width:960px; margin:0 auto; padding:24px 16px 48px; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  .sub { color:var(--muted); font-size:13px; margin-bottom:20px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin-bottom:24px; }
+  .card { background:var(--card); border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+  .card .k { color:var(--muted); font-size:12px; }
+  .card .v { font-size:24px; font-weight:600; margin-top:4px; }
+  .up { color:var(--up); } .down { color:var(--down); }
+  .chart { background:var(--card); border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+  svg { width:100%; height:280px; display:block; }
+  .legend { font-size:12px; color:var(--muted); margin-top:8px; }
+  .empty { color:var(--muted); text-align:center; padding:40px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>积存金价格监控</h1>
+  <div class="sub" id="meta">加载中…</div>
+  <div class="grid" id="stats"></div>
+  <div class="chart">
+    <div style="font-weight:600;margin-bottom:8px;">今日价格走势</div>
+    <svg id="chart" viewBox="0 0 900 280" preserveAspectRatio="none"></svg>
+    <div class="legend">● 现价 (元/克)  ·  每小时自动抓取</div>
+  </div>
+</div>
+<script>
+(async () => {
+  try {
+    const s = await (await fetch('data/summary.json', {cache:'no-store'})).json();
+    const el = (cls, html) => { const d=document.createElement('div'); d.className='card '+cls; d.innerHTML=html; return d; };
+    const L = s.latest || {};
+    const chg = L.raise_amt >= 0;
+    document.getElementById('meta').textContent =
+      `${s.name || ''}  ·  最后更新 ${L.trade_time || '-'}  ·  今日采样 ${s.today_count||0} 次`;
+    const stats = document.getElementById('stats');
+    stats.innerHTML = '';
+    stats.appendChild(el('', `<div class="k">现价</div><div class="v ${chg?'up':'down'}">${L.price!=null?L.price.toFixed(2):'-'}</div>`));
+    stats.appendChild(el('', `<div class="k">涨跌</div><div class="v ${chg?'up':'down'}">${L.raise_amt!=null?(chg?'▲ ':'▼ ')+L.raise_amt.toFixed(2):'-'}<span style="font-size:14px"> (${((L.raise_pct||0)*100).toFixed(2)}%)</span></div>`));
+    stats.appendChild(el('', `<div class="k">今日最高</div><div class="v up">${L.high!=null?L.high.toFixed(2):'-'}</div>`));
+    stats.appendChild(el('', `<div class="k">今日最低</div><div class="v down">${L.low!=null?L.low.toFixed(2):'-'}</div>`));
+    stats.appendChild(el('', `<div class="k">历史最高</div><div class="v">${s.historical_high!=null?s.historical_high.toFixed(2):'-'}</div>`));
+    stats.appendChild(el('', `<div class="k">历史最低</div><div class="v">${s.historical_low!=null?s.historical_low.toFixed(2):'-'}</div>`));
+
+    // SVG 折线图
+    const series = s.today_series || [];
+    const svg = document.getElementById('chart');
+    if (!series.length) { svg.innerHTML='<text x="450" y="140" text-anchor="middle" fill="#8a9099">暂无今日数据</text>'; return; }
+    const W=900,H=280,pad=40;
+    const ps = series.map(p=>p.p);
+    const min=Math.min(...ps), max=Math.max(...ps), range=(max-min)||1;
+    const x = i => pad + (W-2*pad)*(i/(series.length-1||1));
+    const y = p => pad + (H-2*pad)*(1-(p-min)/range);
+    let path = series.map((p,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(p.p).toFixed(1)).join(' ');
+    let area = path + ` L ${x(series.length-1).toFixed(1)} ${H-pad} L ${pad} ${H-pad} Z`;
+    svg.innerHTML = `
+      <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3a9e6b" stop-opacity="0.25"/><stop offset="100%" stop-color="#3a9e6b" stop-opacity="0"/>
+      </linearGradient></defs>
+      <path d="${area}" fill="url(#g)"/>
+      <path d="${path}" fill="none" stroke="#3a9e6b" stroke-width="2"/>
+      <text x="${pad}" y="${pad-12}" font-size="11" fill="#8a9099">${max.toFixed(2)}</text>
+      <text x="${pad}" y="${H-pad+18}" font-size="11" fill="#8a9099">${min.toFixed(2)}</text>
+    `;
+  } catch (e) {
+    document.getElementById('meta').textContent = '加载数据失败：' + e.message;
+  }
+})();
+</script>
+</body>
+</html>

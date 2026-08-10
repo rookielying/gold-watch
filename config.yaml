@@ -1,0 +1,26 @@
+# 黄金价格监控配置
+timezone: Asia/Shanghai
+
+# 数据源
+fetcher: jd_gold
+gold_code: CZB-JCJ        # 京东积存金代码
+
+# 存储
+storage:
+  data_dir: data/gold
+  state_dir: state
+  summary_path: docs/data/summary.json
+
+# 告警：穿越告警状态机
+alerts:
+  enabled: true
+  high_threshold: 950.0    # 突破此价发高价告警
+  low_threshold: 920.0     # 跌破此价发低价告警
+  reset_buffer_pct: 0.005  # 复位缓冲带(0.5%)，防止阈值附近震荡
+
+# 通知渠道
+notifiers:
+  feishu:
+    enabled: true
+    secret_env: FEISHU_WEBHOOK
+    sign_secret_env: FEISHU_SECRET

@@ -1,0 +1,23 @@
+{
+  "timezone": "Asia/Shanghai",
+  "fetcher": "jd_gold",
+  "gold_code": "CZB-JCJ",
+  "storage": {
+    "data_dir": "data/gold",
+    "state_dir": "state",
+    "summary_path": "docs/data/summary.json"
+  },
+  "alerts": {
+    "enabled": true,
+    "high_threshold": 1000.0,
+    "low_threshold": 850.0,
+    "reset_buffer_pct": 0.005
+  },
+  "notifiers": {
+    "feishu": {
+      "enabled": true,
+      "secret_env": "FEISHU_WEBHOOK",
+      "sign_secret_env": "FEISHU_SECRET"
+    }
+  }
+}
