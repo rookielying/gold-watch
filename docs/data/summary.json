@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-08-10T18:24:59.296757+08:00",
+  "generated_at": "2026-08-10T19:43:57.305250+08:00",
   "gold_code": "JCJ",
   "name": "浙商银行积存金",
   "latest": {
-    "price": 942.01,
-    "trade_time": "2026-08-10T18:24:57+08:00",
+    "price": 940.81,
+    "trade_time": "2026-08-10T19:43:55+08:00",
     "open": 938.57,
     "pre_close": 938.46,
     "high": 946.09,
     "low": 935.52,
-    "raise_amt": 3.55,
-    "raise_pct": 0.0037828
+    "raise_amt": 2.35,
+    "raise_pct": 0.0025041
   },
   "historical_high": 955.0,
-  "historical_low": 942.01,
+  "historical_low": 940.81,
   "today_series": [
     {
       "t": "2026-08-10T18:07:36.486430+08:00",
@@ -24,8 +24,13 @@
       "t": "2026-08-10T18:24:57+08:00",
       "p": 942.01,
       "source": "jd_gold"
+    },
+    {
+      "t": "2026-08-10T19:43:55+08:00",
+      "p": 940.81,
+      "source": "jd_gold"
     }
   ],
-  "today_count": 2,
-  "total_count": 2
+  "today_count": 3,
+  "total_count": 3
 }
