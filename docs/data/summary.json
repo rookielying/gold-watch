@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-15T23:15:49.326995+08:00",
+  "generated_at": "2026-08-16T10:19:01.513075+08:00",
   "gold_code": "JCJ",
   "name": "浙商银行积存金",
   "latest": {
@@ -14,13 +14,7 @@
   },
   "historical_high": 961.67,
   "historical_low": 936.36,
-  "today_series": [
-    {
-      "t": "2026-08-15T02:30:05+08:00",
-      "p": 948.89,
-      "source": "jd_gold"
-    }
-  ],
-  "today_count": 1,
+  "today_series": [],
+  "today_count": 0,
   "total_count": 44
 }
