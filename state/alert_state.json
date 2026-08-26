@@ -1,7 +1,7 @@
 {
-  "state": "ABOVE_HIGH",
-  "last_event": "cross_high",
-  "last_event_at": "2026-08-25T22:39:57.530617+08:00",
-  "last_event_price": 1000.32,
-  "updated_at": "2026-08-26T22:39:35.674136+08:00"
+  "state": "NORMAL",
+  "last_event": "reset",
+  "last_event_at": "2026-08-27T00:14:10.580238+08:00",
+  "last_event_price": 993.57,
+  "updated_at": "2026-08-27T00:14:10.580244+08:00"
 }
